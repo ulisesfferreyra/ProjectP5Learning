@@ -13,11 +13,12 @@ public with sharing class UnitService {
         
         if(unitP == null){
             Unit__c unitIdQuery = [SELECT Module__c FROM Unit__c WHERE Id = :unitId];
-            Module__c checkModule = [SELECT (SELECT Id FROM Modules_Progress__r WHERE User__c = :userId) FROM Module__c WHERE Id = :unitIdQuery.Module__c];
+            Module__c checkModule = [SELECT Skills__c, (SELECT Id FROM Modules_Progress__r WHERE User__c = :userId) FROM Module__c WHERE Id = :unitIdQuery.Module__c];
 
 
             if(checkModule.Modules_Progress__r.size() == 0){
-            Module_Progress__c moduleProgressToInsert = new Module_Progress__c(Module__c = unitIdQuery.Module__c, User__c = userId);
+            Module_Progress__c moduleProgressToInsert = new Module_Progress__c(Module__c = unitIdQuery.Module__c, User__c = userId,
+            Status__c = 'In Progress', Skills__c = checkModule.Skills__c);
             insert moduleProgressToInsert;
         
         }
